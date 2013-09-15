@@ -252,7 +252,7 @@ public class iPlatform extends javax.swing.JFrame implements WindowListener,Acti
 	class btaAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			stream.getFilmSize(filmLabel.getWidth(),filmLabel.getHeight());
+			stream.setFilmSize(filmLabel.getWidth(),filmLabel.getHeight());
 		}
 	}
 }//µ{¦¡§ÀºÝ
