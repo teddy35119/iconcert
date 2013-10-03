@@ -57,7 +57,7 @@ public class iStream extends Thread {
 	public void run(){
 		Loader.load(opencv_objdetect.class);
         FrameGrabber grabber = new OpenCVFrameGrabber(0);
-        
+        //audio a=null;
         //grabber.setImageHeight(1024);
         //grabber.setImageWidth(1024);
         //grabber.setFormat("h264");
@@ -67,31 +67,33 @@ public class iStream extends Thread {
 	        CvMemStorage storage = CvMemStorage.create();
 	     
 	        
-	        //FFmpegFrameRecorder recorder = new FFmpegFrameRecorder("mmsh://127.0.0.1:5004", grabber.getImageWidth(), grabber.getImageHeight());
-	        //recorder.setVideoCodec(avcodec.AV_CODEC_ID_H264);
-	        //recorder.setFormat("h264");
-	        //recorder.setPixelFormat(avutil.AV_PIX_FMT_YUV420P);
-	        //recorder.setFrameRate(30);
-	        //recorder.setVideoBitrate(716800);
+	        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder("output.avi", grabber.getImageWidth(), grabber.getImageHeight());
+	        //recorder.setAudioCodec(avcodec.AV_CODEC_ID_MP3);
+	        recorder.setVideoCodec(avcodec.AV_CODEC_ID_H264);
+	        recorder.setFormat("h264");
+	        recorder.setPixelFormat(avutil.AV_PIX_FMT_YUV420P);
+	        recorder.setFrameRate(30);
+	        recorder.setVideoBitrate(716800);
 	
-	       // recorder.start();
-	        
+	        recorder.start();
+	        /*a = new audio(recorder);
+            a.captureAudio();*/
 	        while (isRunning && (grabbedImage = grabber.grab()) != null) {
 				
 	        	//cvSmooth(grabbedImage,grabbedImage, CV_GAUSSIAN, 3);
 	        	//cvThreshold(grabbedImage,grabbedImage, 128, 255, CV_THRESH_BINARY);
-	        	//	recorder.record(grabbedImage);
+	        	recorder.record(grabbedImage);
 	        	img = grabbedImage;
 				icon = new ImageIcon(img.getBufferedImage());
 				setFilmSize();
 				label.setIcon(icon);
 	        }
 			cvClearMemStorage(storage);
-			//recorder.stop();
+			recorder.stop();
 			grabber.stop();
+			//a.stopaudio();
 			
-			
-		}catch (Exception e) {
+		}catch (Exception | com.googlecode.javacv.FrameRecorder.Exception e) {
 			e.printStackTrace();
 			System.out.print(e.getMessage());
 		}
